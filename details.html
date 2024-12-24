@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <title>Cyborg - Awesome HTML5 Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="assets/css/fontawesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-cyborg-gaming.css">
+    <link rel="stylesheet" href="assets/css/owl.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+<!--
+TemplateMo 579 Cyborg Gaming
+https://templatemo.com/tm-579-cyborg-gaming
+-->
+  </head>
+
+<body>
+
+  <!-- ***** Preloader Start ***** -->
+  <div id="js-preloader" class="js-preloader">
+    <div class="preloader-inner">
+      <span class="dot"></span>
+      <div class="dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+  <!-- ***** Preloader End ***** -->
+
+  <!-- ***** Header Area Start ***** -->
+  <header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="index.html" class="logo">
+                        <img src="assets/images/logo.png" alt="">
+                    </a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Search End ***** -->
+                    <div class="search-input">
+                      <form id="search" action="#">
+                        <input type="text" placeholder="Type Something" id='searchText' name="searchKeyword" onkeypress="handle" />
+                        <i class="fa fa-search"></i>
+                      </form>
+                    </div>
+                    <!-- ***** Search End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Tools</a></li>
+                        <li><a href="details.html" class="active">Details</a></li>
+                        <li><a href="profile.html">owner <img src="assets/images/logo.png" alt=""></a></li>
+                    </ul>   
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+  </header>
+  <!-- ***** Header Area End ***** -->
+
+  <!-- ***** Body Section Start ***** -->
+  <section class="main-section">
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <button class="btn btn-primary mb-3">soon</button>
+      </div>
+    </div>
+  </section>
+  <!-- ***** Body Section End ***** -->
+
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Copyright &copy; 2036 <a href="#">Brineajay</a> Company. All rights reserved. 
+          <br>Design: <a href="https://templatemo.com" target="_blank" title="free CSS templates">Brineajay</a></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <style>
+    .centered-text {
+      text-align: center;
+      vertical-align: middle;
+    }
+  </style>
+  
+  <div class="centered-text">
+    <p>The site is in development phase so all feactures are not acessable once it finished it will acessable.</p>
+ <!-- Suggestion Form Section -->
+ <h3>---</h3>
+<<!-- Suggestion Form Section -->
+<h1 style="text-align: center; text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;"></h1>
+<form id="suggestionForm" style="background: #111; border: 1px solid #00ff00; border-radius: 10px; padding: 20px; box-shadow: 0 0 15px #00ff00; max-width: 400px; margin: 0 auto; width: 90%;">
+  <textarea id="suggestion" placeholder="Write your suggestion here..." required style="width: 100%; height: 100px; background: #000; color: #00ff00; border: 1px solid #00ff00; border-radius: 5px; padding: 10px; resize: none; font-size: 16px;"></textarea>
+  <button type="submit" style="width: 100%; padding: 10px; margin-top: 10px; background: #000; color: #00ff00; border: 1px solid #00ff00; border-radius: 5px; font-size: 16px; cursor: pointer; transition: 0.3s;">Submit</button>
+</form>
+
+<script>
+  document.getElementById('suggestionForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const suggestion = document.getElementById('suggestion').value;
+    if (!suggestion.trim()) {
+      alert("Suggestion cannot be empty!");
+      return;
+    }
+
+    // Prompt for name after suggestion submission
+    const name = prompt("Please enter your name:");
+
+    if (!name || !name.trim()) {
+      alert("Name cannot be empty!");
+      return;
+    }
+
+    const webhookUrl = "https://discord.com/api/webhooks/1319609830134251581/4w10hVjD6r3C2kH9bFKQIjL0bsQnaovV-7uT_hLkSnUBkzRZSesdhB4K0RJX-1CW2j-P";
+
+    // Send both the name and suggestion in the webhook request
+    fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: `Name: ${name}\nSuggestion: ${suggestion}`
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("Suggestion submitted successfully!");
+        document.getElementById('suggestion').value = ''; // Clear the textarea
+      } else {
+        alert("Failed to submit suggestion. Please try again.");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred while submitting your suggestion.");
+    });
+  });
+</script>
+
+
+  </div>
+  <!-- Scripts -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+  <script src="assets/js/isotope.min.js"></script>
+  <script src="assets/js/owl-carousel.js"></script>
+  <script src="assets/js/tabs.js"></script>
+  <script src="assets/js/popup.js"></script>
+  <script src="assets/js/custom.js"></script>
+
+  </body>
+
+</html>

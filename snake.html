@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Snake Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 5px solid red; /* Added red border to the canvas */
+        }
+        #scoreboard {
+            position: absolute;
+            top: 20px;
+            font-size: 20px;
+            color: #fff;
+        }
+        #highScore {
+            position: absolute;
+            top: 50px;
+            font-size: 20px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="scoreboard">
+        Score: <span id="score">0</span>
+    </div>
+    <div id="highScore">
+        High Score: <span id="highScoreValue">0</span>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let canvasWidth = window.innerWidth;
+        let canvasHeight = window.innerHeight;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        const gridSize = 20;  // The original grid size for the snake
+        const foodSize = gridSize * 2;  // Increase food size by 100%
+        const directions = { UP: 'UP', DOWN: 'DOWN', LEFT: 'LEFT', RIGHT: 'RIGHT' };
+        let snake = [{ x: Math.floor(canvasWidth / 2 / gridSize) * gridSize, y: Math.floor(canvasHeight / 2 / gridSize) * gridSize }];
+        let food = generateFood();
+        let currentDirection = directions.RIGHT;
+        let nextDirection = directions.RIGHT;
+        let score = 0;
+        let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0; // Load high score from localStorage
+
+        // Display the high score
+        document.getElementById("highScoreValue").innerText = highScore;
+
+        // Load food texture
+        const foodTexture = new Image();
+        foodTexture.src = 'https://media.discordapp.net/attachments/1223998992527130707/1321118026162110475/goldenapple.webp?ex=676c128a&is=676ac10a&hm=1985275c86b829c153d0cf18daa295c3920f68fcb3a0c86f70ddfdb1457ebc7e&=&format=webp'; // Replace with your own image URL
+
+        // Load background image
+        const backgroundImage = new Image();
+        backgroundImage.src = 'https://media.discordapp.net/attachments/1223998992527130707/1321119329365917790/backgroundmcpe.png?ex=676c13c1&is=676ac241&hm=8c71ec5d2706bab14d3ee5b93940a087036a6896da72d7a030c976ae354b9b93&=&format=webp&quality=lossless&width=746&height=390'; // Replace with your background image URL
+
+        
+        document.getElementById("score").innerText = score;
+
+        // Set the speed (slower than before)
+        const gameSpeed = 150; // Lower value = slower speed (milliseconds per frame)
+        
+        // Start the game loop
+        function gameLoop() {
+            update();
+            draw();
+            if (checkGameOver()) {
+                updateHighScore();  // Update the high score if the current score is higher
+                alert("Game Over!");
+                resetGame();
+            }
+        }
+
+        function update() {
+            currentDirection = nextDirection;
+
+            const head = { ...snake[0] };
+            if (currentDirection === directions.UP) head.y -= gridSize;
+            if (currentDirection === directions.DOWN) head.y += gridSize;
+            if (currentDirection === directions.LEFT) head.x -= gridSize;
+            if (currentDirection === directions.RIGHT) head.x += gridSize;
+
+            snake.unshift(head);
+
+            // Adjusted collision check with larger food
+            if (head.x < food.x + foodSize && head.x + gridSize > food.x && head.y < food.y + foodSize && head.y + gridSize > food.y) {
+                score++;
+                document.getElementById("score").innerText = score;
+                food = generateFood();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw background image (scale it to cover full screen)
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+            // Draw snake with a 3D effect
+            for (let i = 0; i < snake.length; i++) {
+                const segment = snake[i];
+                const segmentX = segment.x;
+                const segmentY = segment.y;
+
+                // 3D shadow effect
+                ctx.shadowOffsetX = 3;
+                ctx.shadowOffsetY = 3;
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+
+                // Snake gradient (to create a 3D look)
+                const gradient = ctx.createRadialGradient(segmentX + gridSize / 2, segmentY + gridSize / 2, 1, segmentX + gridSize / 2, segmentY + gridSize / 2, gridSize);
+                gradient.addColorStop(0, 'lime'); // Lighter color in the center
+                gradient.addColorStop(1, 'darkgreen'); // Darker color at the edges
+
+                ctx.fillStyle = gradient;
+                ctx.fillRect(segmentX, segmentY, gridSize, gridSize);
+            }
+
+            // Draw food with texture (increased size by 100%)
+            ctx.drawImage(foodTexture, food.x, food.y, foodSize, foodSize);  // Draw larger food
+        }
+
+        function generateFood() {
+            const x = Math.floor(Math.random() * (canvasWidth / foodSize)) * foodSize;
+            const y = Math.floor(Math.random() * (canvasHeight / foodSize)) * foodSize;
+            return { x, y };
+        }
+
+        function checkGameOver() {
+            const head = snake[0];
+            if (head.x < 0 || head.x >= canvasWidth || head.y < 0 || head.y >= canvasHeight) {
+                return true;
+            }
+            for (let i = 1; i < snake.length; i++) {
+                if (snake[i].x === head.x && snake[i].y === head.y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function updateHighScore() {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore); // Save the new high score in localStorage
+                document.getElementById("highScoreValue").innerText = highScore; // Update displayed high score
+            }
+        }
+
+        function resetGame() {
+            snake = [{ x: Math.floor(canvasWidth / 2 / gridSize) * gridSize, y: Math.floor(canvasHeight / 2 / gridSize) * gridSize }];
+            food = generateFood();
+            currentDirection = directions.RIGHT;
+            nextDirection = directions.RIGHT;
+            score = 0;
+            document.getElementById("score").innerText = score;
+            gameLoop();
+        }
+
+        // Prevent the snake from reversing direction
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowUp" && currentDirection !== directions.DOWN) nextDirection = directions.UP;
+            if (event.key === "ArrowDown" && currentDirection !== directions.UP) nextDirection = directions.DOWN;
+            if (event.key === "ArrowLeft" && currentDirection !== directions.RIGHT) nextDirection = directions.LEFT;
+            if (event.key === "ArrowRight" && currentDirection !== directions.LEFT) nextDirection = directions.RIGHT;
+        });
+
+        // Adjust the canvas size when the window is resized
+        window.addEventListener('resize', () => {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            resetGame();
+        });
+
+        // Start the game once the images are loaded
+        foodTexture.onload = function() {
+            backgroundImage.onload = function() {
+                setInterval(gameLoop, gameSpeed); // Start the game loop at a slower speed
+            };
+        }
+    </script>
+</body>
+</html>

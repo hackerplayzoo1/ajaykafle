@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe - Hacking Theme</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            border: 2px solid #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            background-color: #1a1a1a;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin-top: 20px;
+        }
+        .grid div {
+            width: 100px;
+            height: 100px;
+            background-color: #2a2a2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5em;
+            color: #00ff00;
+            cursor: pointer;
+            border: 2px solid #00ff00;
+            transition: background-color 0.3s ease;
+        }
+        .grid div:hover {
+            background-color: #333;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 12px 30px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border: none;
+            background-color: #00ff00;
+            color: #121212;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #33cc33;
+        }
+        .reset {
+            background-color: #ff4444;
+        }
+        .reset:hover {
+            background-color: #cc3333;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #00ff00;
+            text-transform: uppercase;
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Tic Tac Toe</h1>
+    <div>
+        <button class="button" onclick="startGame()">Start New Game</button>
+    </div>
+    <div class="grid" id="grid">
+        <!-- Game grid will be rendered here -->
+    </div>
+    <div id="gameMessage" class="message blink"></div>
+    <button class="button reset" id="resetButton" onclick="resetGame()" style="display:none;">Reset Game</button>
+</div>
+
+<script>
+    let board;
+    let currentPlayer;
+    let gameOver;
+
+    function startGame() {
+        board = [['', '', ''], ['', '', ''], ['', '', '']];
+        currentPlayer = 'X';
+        gameOver = false;
+        gameMessage.textContent = `Player ${currentPlayer}'s turn`;
+        gameMessage.classList.remove('blink');
+        renderBoard();
+        document.getElementById('resetButton').style.display = 'none';
+    }
+
+    function renderBoard() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = ''; // Clear previous grid
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.textContent = board[i][j];
+                cell.onclick = () => makeMove(i, j);
+                grid.appendChild(cell);
+            }
+        }
+    }
+
+    function makeMove(i, j) {
+        if (board[i][j] === '' && !gameOver) {
+            board[i][j] = currentPlayer;
+            if (checkWin()) {
+                gameMessage.textContent = `Player ${currentPlayer} wins!`;
+                gameMessage.classList.remove('blink');
+                gameOver = true;
+                document.getElementById('resetButton').style.display = 'block';
+                return;
+            } else if (checkDraw()) {
+                gameMessage.textContent = "It's a draw!";
+                gameMessage.classList.remove('blink');
+                gameOver = true;
+                document.getElementById('resetButton').style.display = 'block';
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            gameMessage.textContent = `Player ${currentPlayer}'s turn`;
+
+            renderBoard();
+        }
+    }
+
+    function checkWin() {
+        // Check rows, columns, and diagonals for a win
+        for (let i = 0; i < 3; i++) {
+            if (board[i][0] === board[i][1] && board[i][1] === board[i][2] && board[i][0] !== '') return true;
+            if (board[0][i] === board[1][i] && board[1][i] === board[2][i] && board[0][i] !== '') return true;
+        }
+        if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[0][0] !== '') return true;
+        if (board[0][2] === board[1][1] && board[1][1] === board[2][0] && board[0][2] !== '') return true;
+        return false;
+    }
+
+    function checkDraw() {
+        return board.flat().every(cell => cell !== '');
+    }
+
+    function resetGame() {
+        startGame();
+    }
+
+    // Initialize the game
+    startGame();
+</script>
+
+</body>
+</html>

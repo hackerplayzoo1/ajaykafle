@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 320px;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #444;
+            color: white;
+            text-align: right;
+        }
+        button {
+            background-color: #555;
+            color: white;
+            padding: 20px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 22%;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #666;
+        }
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .output {
+            font-size: 1.5em;
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Simple Calculator</h1>
+
+    <input type="text" id="calcInput" placeholder="Enter calculation" readonly>
+
+    <div class="button-row">
+        <button onclick="appendToInput('7')">7</button>
+        <button onclick="appendToInput('8')">8</button>
+        <button onclick="appendToInput('9')">9</button>
+        <button onclick="appendToInput('/')">/</button>
+    </div>
+    <div class="button-row">
+        <button onclick="appendToInput('4')">4</button>
+        <button onclick="appendToInput('5')">5</button>
+        <button onclick="appendToInput('6')">6</button>
+        <button onclick="appendToInput('*')">*</button>
+    </div>
+    <div class="button-row">
+        <button onclick="appendToInput('1')">1</button>
+        <button onclick="appendToInput('2')">2</button>
+        <button onclick="appendToInput('3')">3</button>
+        <button onclick="appendToInput('-')">-</button>
+    </div>
+    <div class="button-row">
+        <button onclick="appendToInput('0')">0</button>
+        <button onclick="appendToInput('.')">.</button>
+        <button onclick="deleteLast()">Del</button>
+        <button onclick="appendToInput('+')">+</button>
+    </div>
+    <div class="button-row">
+        <button onclick="calculate()">=</button>
+        <button onclick="clearAll()">C</button>
+    </div>
+
+    <div id="calcOutput" class="output"></div>
+</div>
+
+<script>
+    function appendToInput(value) {
+        const inputField = document.getElementById("calcInput");
+        inputField.value += value;
+    }
+
+    function deleteLast() {
+        const inputField = document.getElementById("calcInput");
+        inputField.value = inputField.value.slice(0, -1);
+        document.getElementById("calcOutput").textContent = '';
+    }
+
+    function clearAll() {
+        const inputField = document.getElementById("calcInput");
+        inputField.value = '';
+        document.getElementById("calcOutput").textContent = '';
+    }
+
+    function calculate() {
+        const input = document.getElementById("calcInput").value;
+
+        try {
+            let result = eval(input);  // Evaluate the arithmetic expression
+            if (typeof result === 'number') {
+                document.getElementById("calcOutput").textContent = result;
+            } else {
+                document.getElementById("calcOutput").textContent = "Invalid Input";
+            }
+        } catch (error) {
+            document.getElementById("calcOutput").textContent = "Error: Invalid input";
+        }
+    }
+</script>
+
+</body>
+</html>
